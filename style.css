@@ -61,6 +61,16 @@ body {
   min-height: 640px;
   display: flex;
   flex-direction: column;
+  transition: max-width .3s ease;
+}
+
+/* Versión expandida — se activa después del login (pantallas internas).
+   En móvil mantiene el ancho de 480px; solo crece en pantallas grandes. */
+@media (min-width: 768px) {
+  .app.app-wide {
+    max-width: min(90vw, 1200px);
+    min-height: 80vh;
+  }
 }
 
 /* ============ SCREENS ============ */
@@ -535,4 +545,43 @@ body {
 .form-control:focus-visible {
   outline: 2px solid var(--nx-purple-soft);
   outline-offset: 2px;
+}
+
+/* ============================================
+   AJUSTES DESKTOP — proporciones internas
+   Cuando .app crece, los componentes de cada
+   pantalla se limitan para no quedar gigantes.
+   ============================================ */
+@media (min-width: 768px) {
+  /* Perfil: tarjeta centrada con ancho legible */
+  .app-wide .profile-card {
+    max-width: 560px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Tabla de notas / asistencias: centrada y con tope */
+  .app-wide .grades-table-wrap {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Stats de asistencia: alineadas con la tabla */
+  .app-wide .att-stats {
+    max-width: 640px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* Tiles del home: altura un poco mayor en desktop */
+  .app-wide .menu-tile {
+    min-height: 140px;
+    font-size: 14px;
+    padding: 28px 16px;
+  }
+  .app-wide .menu-tile i {
+    font-size: 28px;
+    margin-bottom: 10px;
+  }
 }

@@ -14,10 +14,17 @@ let currentStudent = null;  // perfil de students + group (solo si type = estudi
 // ============ NAVIGATION ============
 let history = ['login'];
 
+// Pantallas que se muestran angostas (login, registro). El resto va ancho.
+const NARROW_SCREENS = ['login', 'register'];
+
 function showScreen(screenId) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
   const target = document.getElementById('screen-' + screenId);
   if (target) target.classList.add('active');
+
+  // Expandir contenedor en pantallas internas (post-login)
+  const appEl = document.querySelector('.app');
+  if (appEl) appEl.classList.toggle('app-wide', !NARROW_SCREENS.includes(screenId));
 }
 
 function navigate(screenId) {
