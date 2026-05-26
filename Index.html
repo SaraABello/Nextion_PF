@@ -114,7 +114,7 @@
       <div class="text-center mb-3">
         <h2 class="screen-title">HOME — ESTUDIANTE</h2>
       </div>
-      <p class="welcome text-center mb-3">Hola, <strong id="welcomeName">estudiante</strong> 👋</p>
+      <p class="welcome text-center mb-3">Hola, <strong class="welcome-name">estudiante</strong> 👋</p>
 
       <div class="row g-3 mb-4 justify-content-center">
         <div class="col-6 col-md-4">
@@ -242,6 +242,115 @@
             </table>
           </div>
         </div>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN: TEACHER HOME ============ -->
+    <section class="screen" id="screen-teacher-home">
+      <div class="text-center mb-3">
+        <h2 class="screen-title">HOME — DOCENTE</h2>
+      </div>
+      <p class="welcome text-center mb-3">Hola, <strong class="welcome-name">docente</strong> 👨‍🏫</p>
+
+      <div class="row g-3 mb-4 justify-content-center">
+        <div class="col-6 col-md-4">
+          <button class="menu-tile" onclick="navigate('teacher-subjects')">
+            <i class="bi bi-book"></i>
+            <span>Mis<br>Asignaturas</span>
+          </button>
+        </div>
+        <div class="col-6 col-md-4">
+          <button class="menu-tile" onclick="navigate('teacher-grades')">
+            <i class="bi bi-pencil-square"></i>
+            <span>Calificar<br>Estudiantes</span>
+          </button>
+        </div>
+        <div class="col-6 col-md-4">
+          <button class="menu-tile" onclick="navigate('teacher-attendance')">
+            <i class="bi bi-clipboard-check"></i>
+            <span>Registrar<br>Asistencias</span>
+          </button>
+        </div>
+        <div class="col-6 col-md-4">
+          <button class="menu-tile" onclick="navigate('teacher-students')">
+            <i class="bi bi-people"></i>
+            <span>Listado<br>Estudiantes</span>
+          </button>
+        </div>
+        <div class="col-12 col-md-4">
+          <button class="menu-tile" onclick="navigate('datos')">
+            <i class="bi bi-person-vcard"></i>
+            <span>Mis datos<br>personales</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end mt-auto w-100">
+        <button class="btn btn-logout" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN: TEACHER — MIS ASIGNATURAS (placeholder) ============ -->
+    <section class="screen" id="screen-teacher-subjects">
+      <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
+        <i class="bi bi-arrow-left"></i> Atrás
+      </button>
+      <div class="text-center mb-3">
+        <h2 class="screen-title">MIS ASIGNATURAS</h2>
+        <p class="screen-subtitle">Crear y gestionar las materias que dictas</p>
+      </div>
+      <div class="placeholder-box">
+        <i class="bi bi-book"></i>
+        <div class="placeholder-title">Próximamente — Fase 2</div>
+        <p class="placeholder-text">Aquí podrás crear materias nuevas y asignarlas a los grupos que enseñas.</p>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN: TEACHER — CALIFICAR (placeholder) ============ -->
+    <section class="screen" id="screen-teacher-grades">
+      <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
+        <i class="bi bi-arrow-left"></i> Atrás
+      </button>
+      <div class="text-center mb-3">
+        <h2 class="screen-title">CALIFICAR ESTUDIANTES</h2>
+        <p class="screen-subtitle">Registra notas por estudiante y período</p>
+      </div>
+      <div class="placeholder-box">
+        <i class="bi bi-pencil-square"></i>
+        <div class="placeholder-title">Próximamente — Fase 3</div>
+        <p class="placeholder-text">Selecciona una asignatura, escoge un estudiante y registra sus notas de los 4 períodos.</p>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN: TEACHER — ASISTENCIAS (placeholder) ============ -->
+    <section class="screen" id="screen-teacher-attendance">
+      <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
+        <i class="bi bi-arrow-left"></i> Atrás
+      </button>
+      <div class="text-center mb-3">
+        <h2 class="screen-title">REGISTRAR ASISTENCIAS</h2>
+        <p class="screen-subtitle">Marca la asistencia del día por asignatura</p>
+      </div>
+      <div class="placeholder-box">
+        <i class="bi bi-clipboard-check"></i>
+        <div class="placeholder-title">Próximamente — Fase 4</div>
+        <p class="placeholder-text">Selecciona una asignatura, escoge la fecha y marca cada estudiante como presente, ausente o justificado.</p>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN: TEACHER — ESTUDIANTES (placeholder) ============ -->
+    <section class="screen" id="screen-teacher-students">
+      <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
+        <i class="bi bi-arrow-left"></i> Atrás
+      </button>
+      <div class="text-center mb-3">
+        <h2 class="screen-title">ESTUDIANTES</h2>
+        <p class="screen-subtitle">Listado de estudiantes activos</p>
+      </div>
+      <div class="placeholder-box">
+        <i class="bi bi-people"></i>
+        <div class="placeholder-title">Próximamente — Fase 5</div>
+        <p class="placeholder-text">Aquí verás todos los estudiantes activos y podrás editar su información.</p>
       </div>
     </section>
 

@@ -10,6 +10,7 @@ const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLI
 // Aquí guardamos los datos del usuario logueado durante la sesión actual.
 let currentUser = null;     // fila de la tabla users
 let currentStudent = null;  // perfil de students + group (solo si type = estudiante)
+let currentTeacher = null;  // perfil de teachers (solo si type = docente)
 
 // ============ NAVIGATION ============
 let history = ['login'];
@@ -78,11 +79,12 @@ async function handleLogin(e) {
 
   currentUser = userRow;
 
-  // 2) Si es estudiante (type = FALSE), traer su perfil de students + groups
+  // 2) Cargar perfil según rol
   if (userRow.type === false) {
+    // Estudiante
     const { data: studentRow, error: studErr } = await supabaseClient
       .from('students')
-      .select('id, id_document, name, last_name, status, groups(name, grade, year)')
+      .select('id, id_document, name, last_name, status, groups(id, name, grade, year)')
       .eq('id_user', userRow.id)
       .maybeSingle();
 
@@ -92,22 +94,37 @@ async function handleLogin(e) {
       return;
     }
     currentStudent = studentRow;
+    currentTeacher = null;
   } else {
+    // Docente
+    const { data: teacherRow, error: tErr } = await supabaseClient
+      .from('teachers')
+      .select('id, name, last_name')
+      .eq('id_user', userRow.id)
+      .maybeSingle();
+
+    if (tErr) {
+      error.textContent = 'Error cargando el perfil del docente';
+      console.error(tErr);
+      return;
+    }
+    currentTeacher = teacherRow;
     currentStudent = null;
   }
 
-  // 3) Listo: limpiar y entrar al home
+  // 3) Routing por rol
   error.textContent = '';
   refreshProfile();
-  history = ['login', 'home'];
-  showScreen('home');
+  const homeScreen = currentTeacher ? 'teacher-home' : 'home';
+  history = ['login', homeScreen];
+  showScreen(homeScreen);
 }
 
 function refreshProfile() {
-  // Nombre que se muestra en el saludo del home
-  const displayName = currentStudent
-    ? `${currentStudent.name} ${currentStudent.last_name}`
-    : (currentUser?.username || 'estudiante');
+  // Nombre que se muestra en el saludo de cualquier home
+  let displayName = currentUser?.username || 'usuario';
+  if (currentStudent) displayName = `${currentStudent.name} ${currentStudent.last_name}`;
+  if (currentTeacher) displayName = `${currentTeacher.name} ${currentTeacher.last_name}`;
 
   const initials = displayName
     .split(' ')
@@ -116,25 +133,33 @@ function refreshProfile() {
     .slice(0, 2)
     .toUpperCase();
 
-  document.getElementById('welcomeName').textContent = displayName;
-  document.getElementById('profileAvatar').textContent = initials;
-  document.getElementById('profileName').textContent = displayName;
+  // Saludo en TODOS los home (estudiante y docente)
+  document.querySelectorAll('.welcome-name').forEach(el => el.textContent = displayName);
 
-  // Pantalla "Datos personales" — solo si es estudiante
+  // Avatar y nombre del perfil
+  setProfileField('profileAvatar', initials);
+  setProfileField('profileName', displayName);
+
+  // Campos de "Datos personales" — varían según rol
   if (currentStudent) {
     const grupo = currentStudent.groups
       ? `${currentStudent.groups.grade} · ${currentStudent.groups.name} · ${currentStudent.groups.year}`
       : '—';
-
     setProfileField('profileDocumento', currentStudent.id_document);
     setProfileField('profileGrupo', currentStudent.groups?.name ?? '—');
     setProfileField('profileAnio', currentStudent.groups?.year ?? '—');
     setProfileField('profileEstado', currentStudent.status ? 'Activo' : 'Inactivo');
     setProfileField('profileMeta', `Estudiante · ${grupo}`);
+  } else if (currentTeacher) {
+    setProfileField('profileDocumento', '—');
+    setProfileField('profileGrupo', '—');
+    setProfileField('profileAnio', '—');
+    setProfileField('profileEstado', 'Activo');
+    setProfileField('profileMeta', 'Docente');
   }
 
-  // Correo: aún no está en la tabla, lo derivamos del username
-  const fallbackEmail = `${(currentUser?.username || 'estudiante').toLowerCase()}@nextion.edu.co`;
+  // Correo derivado del username (la tabla aún no lo almacena)
+  const fallbackEmail = `${(currentUser?.username || 'usuario').toLowerCase()}@nextion.edu.co`;
   setProfileField('profileEmail', fallbackEmail);
 }
 
@@ -146,6 +171,7 @@ function setProfileField(id, value) {
 function logout() {
   currentUser = null;
   currentStudent = null;
+  currentTeacher = null;
   document.getElementById('user').value = '';
   document.getElementById('pass').value = '';
   document.getElementById('loginError').textContent = '';
