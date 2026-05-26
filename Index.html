@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEXTION</title>
+
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap Icons -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+<style>
+  /* ============================================
+     NEXTION — Custom theme over Bootstrap
+     ============================================ */
+
+  :root {
+    --nx-bg-dark: #0A0612;
+    --nx-bg-deep: #1A0B2E;
+    --nx-card: #14081F;
+    --nx-card-soft: #1A0E2D;
+    --nx-border: #4C1D95;
+    --nx-purple: #A855F7;
+    --nx-purple-deep: #7E22CE;
+    --nx-purple-soft: #C084FC;
+    --nx-pink: #EC4899;
+    --nx-pink-soft: #F472B6;
+    --nx-blue: #3B82F6;
+    --nx-text: #FFFFFF;
+    --nx-text-muted: #CBD5E1;
+    --nx-text-dim: #94A3B8;
+  }
+
+  /* ============ BASE ============ */
+  body {
+    font-family: 'Century Gothic', 'CenturyGothic', 'AppleGothic', 'Trebuchet MS', sans-serif;
+    background:
+      radial-gradient(ellipse at 20% 40%, rgba(126, 34, 206, 0.55) 0%, transparent 55%),
+      radial-gradient(ellipse at 85% 80%, rgba(168, 85, 247, 0.35) 0%, transparent 55%),
+      linear-gradient(135deg, var(--nx-bg-deep) 0%, var(--nx-bg-dark) 100%);
+    background-attachment: fixed;
+    color: var(--nx-text);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 12px;
+  }
+
+  /* ============ APP CONTAINER ============ */
+  .app {
+    width: 100%;
+    max-width: 480px;
+    background: var(--nx-card);
+    border: 1.5px solid var(--nx-border);
+    border-radius: 22px;
+    box-shadow:
+      0 30px 80px rgba(0, 0, 0, 0.6),
+      0 0 0 1px rgba(168, 85, 247, 0.08) inset,
+      0 0 60px rgba(168, 85, 247, 0.15);
+    overflow: hidden;
+    min-height: 640px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ============ SCREENS ============ */
+  .screen {
+    flex: 1;
+    padding: 28px 24px 32px;
+    display: none;
+    flex-direction: column;
+    animation: fadeIn .35s ease;
+  }
+  .screen.active { display: flex; }
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .screen-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: var(--nx-text);
+    margin-bottom: 4px;
+    text-align: center;
+  }
+  .screen-subtitle {
+    font-size: 12px;
+    color: var(--nx-text-dim);
+    font-style: italic;
+    margin-bottom: 0;
+    text-align: center;
+  }
+
+  /* ============ BACK BUTTON ============ */
+  .btn-back {
+    background: transparent;
+    border: 1px solid rgba(192, 132, 252, 0.4);
+    color: var(--nx-purple-soft);
+    font-weight: 700;
+    font-size: 12px;
+    padding: 6px 12px;
+    border-radius: 6px;
+    transition: all .2s ease;
+  }
+  .btn-back:hover {
+    background: rgba(168, 85, 247, 0.15);
+    color: var(--nx-text);
+    border-color: var(--nx-purple-soft);
+  }
+
+  /* ============ LOGIN CARD ============ */
+  .login-card {
+    background: linear-gradient(135deg, var(--nx-pink) 0%, var(--nx-purple) 100%);
+    border-radius: 14px;
+    padding: 28px 24px;
+    margin: 8px auto 0;
+    width: 100%;
+    max-width: 340px;
+    box-shadow: 0 12px 40px rgba(236, 72, 153, 0.35);
+  }
+  .login-card .form-label {
+    display: block;
+    width: 100%;
+    text-align: center;
+    color: var(--nx-text);
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .login-card .form-control {
+    display: block;
+    width: 100%;
+    border: none;
+    border-radius: 6px;
+    padding: 11px 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: #1E293B;
+    background: var(--nx-text);
+    box-shadow: none;
+  }
+  .login-card .form-control:focus {
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.4);
+  }
+
+  .btn-nx-primary {
+    display: block;
+    width: 100%;
+    background: var(--nx-pink-soft);
+    color: var(--nx-text);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 11px 14px;
+    border-radius: 7px;
+    transition: all .2s ease;
+  }
+  .btn-nx-primary:hover {
+    background: var(--nx-pink);
+    color: var(--nx-text);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 16px rgba(236, 72, 153, 0.4);
+  }
+  .btn-nx-secondary {
+    display: block;
+    width: 100%;
+    background: rgba(249, 168, 212, 0.6);
+    color: var(--nx-text);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    font-weight: 700;
+    font-size: 13px;
+    padding: 11px 14px;
+    border-radius: 7px;
+    transition: all .2s ease;
+  }
+  .btn-nx-secondary:hover {
+    background: rgba(249, 168, 212, 0.85);
+    color: var(--nx-text);
+    transform: translateY(-1px);
+  }
+
+  .login-error {
+    text-align: center;
+    color: #FECDD3;
+    font-size: 12px;
+    min-height: 16px;
+  }
+  .login-hint {
+    text-align: center;
+    color: var(--nx-text-dim);
+    font-size: 11px;
+    font-style: italic;
+  }
+  .login-hint code {
+    background: rgba(168, 85, 247, 0.18);
+    color: var(--nx-purple-soft);
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Consolas', monospace;
+    font-size: 10.5px;
+  }
+
+  /* ============ HOME — MENU TILES ============ */
+  .welcome { color: var(--nx-purple-soft); font-size: 13px; width: 100%; }
+  .welcome strong { color: var(--nx-text); }
+
+  .menu-tile {
+    background: linear-gradient(135deg, var(--nx-purple-deep) 0%, #3B0764 100%);
+    border: 1px solid var(--nx-purple-soft);
+    border-radius: 12px;
+    padding: 22px 14px;
+    color: var(--nx-text);
+    font-weight: 700;
+    font-size: 13px;
+    line-height: 1.35;
+    min-height: 96px;
+    width: 100%;
+    transition: all .2s ease;
+    box-shadow: 0 6px 20px rgba(126, 34, 206, 0.3);
+    text-align: center;
+  }
+  .menu-tile:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(168, 85, 247, 0.45);
+    border-color: var(--nx-text);
+    color: var(--nx-text);
+  }
+  .menu-tile i {
+    font-size: 22px;
+    line-height: 1;
+    display: block;
+    margin-bottom: 6px;
+  }
+  .menu-tile span { display: block; }
+
+  .btn-logout {
+    background: rgba(236, 72, 153, 0.75);
+    color: var(--nx-text);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 7px;
+    padding: 10px 20px;
+    font-weight: 700;
+    font-size: 12px;
+    transition: all .2s ease;
+  }
+  .btn-logout:hover {
+    background: var(--nx-pink);
+    color: var(--nx-text);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(236, 72, 153, 0.4);
+  }
+
+  /* ============ CALIFICACIONES ============ */
+  .subjects-sidebar {
+    background: var(--nx-card-soft);
+    border: 1px solid var(--nx-border);
+    border-radius: 8px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .subject-item {
+    padding: 10px 8px;
+    text-align: center;
+    border-radius: 5px;
+    color: var(--nx-text-muted);
+    font-size: 11.5px;
+    cursor: pointer;
+    transition: all .15s ease;
+    user-select: none;
+  }
+  .subject-item:hover {
+    background: rgba(168, 85, 247, 0.15);
+    color: var(--nx-text);
+  }
+  .subject-item.active {
+    background: var(--nx-pink);
+    color: var(--nx-text);
+    font-weight: 700;
+    box-shadow: 0 4px 12px rgba(236, 72, 153, 0.4);
+  }
+
+  .grades-table-wrap {
+    background: var(--nx-card-soft);
+    border: 1px solid var(--nx-border);
+    border-radius: 8px;
+    overflow: hidden;
+    flex: 1;
+  }
+  .grades-table {
+    width: 100%;
+    margin: 0;
+    color: var(--nx-text-muted);
+    --bs-table-bg: transparent;
+    --bs-table-color: var(--nx-text-muted);
+    --bs-table-border-color: rgba(76, 29, 149, 0.4);
+  }
+  .grades-table thead tr {
+    background: var(--nx-purple-deep);
+  }
+  .grades-table thead th {
+    color: var(--nx-text);
+    background: var(--nx-purple-deep);
+    padding: 11px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    border: none;
+  }
+  .grades-table thead th:last-child { text-align: right; }
+  .grades-table tbody td {
+    padding: 11px 14px;
+    border-bottom: 1px solid rgba(76, 29, 149, 0.4);
+    border-top: none;
+    font-size: 12.5px;
+    color: var(--nx-text-muted);
+    background: transparent;
+  }
+  .grades-table tbody td:last-child {
+    text-align: right;
+    color: var(--nx-purple-soft);
+    font-weight: 700;
+  }
+  .grades-table tbody tr:last-child td {
+    border-bottom: none;
+    background: rgba(236, 72, 153, 0.18);
+    color: var(--nx-text);
+    font-weight: 700;
+  }
+  .grades-table tbody tr:last-child td:last-child {
+    color: var(--nx-text);
+  }
+
+  /* ============ PLACEHOLDER SCREEN ============ */
+  .placeholder-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--nx-text-dim);
+    padding: 40px 20px;
+    flex: 1;
+  }
+  .placeholder-box i {
+    font-size: 48px;
+    margin-bottom: 20px;
+    opacity: 0.6;
+    color: var(--nx-purple-soft);
+  }
+  .placeholder-title {
+    color: var(--nx-text);
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .placeholder-text {
+    font-size: 13px;
+    line-height: 1.5;
+    max-width: 280px;
+    margin: 0 auto;
+  }
+
+  /* ============ INFO STRIP ============ */
+  .info-strip {
+    margin-top: 20px;
+    text-align: center;
+    color: #64748B;
+    font-size: 11px;
+    letter-spacing: 4px;
+  }
+
+  /* Force-override Bootstrap focus rings to use brand color */
+  .btn:focus-visible,
+  .form-control:focus-visible {
+    outline: 2px solid var(--nx-purple-soft);
+    outline-offset: 2px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="app">
+
+    <!-- ============ SCREEN: LOGIN ============ -->
+    <section class="screen active" id="screen-login">
+      <div class="text-center mb-3">
+        <h2 class="screen-title">LOGIN</h2>
+        <p class="screen-subtitle">Inicia sesión para continuar</p>
+      </div>
+
+      <form class="login-card" id="loginForm" onsubmit="handleLogin(event)">
+        <div class="mb-3">
+          <label class="form-label" for="user">Usuario</label>
+          <input class="form-control" id="user" type="text" autocomplete="username">
+        </div>
+        <div class="mb-3">
+          <label class="form-label" for="pass">Contraseña</label>
+          <input class="form-control" id="pass" type="password" autocomplete="current-password">
+        </div>
+        <button type="submit" class="btn btn-nx-primary w-100 mb-2">Iniciar sesión</button>
+        <button type="button" class="btn btn-nx-secondary w-100" onclick="navigate('register')">Registro Nuevo usuario</button>
+      </form>
+
+      <p class="login-error mt-3 mb-0" id="loginError"></p>
+      <p class="login-hint mt-3 mb-0">
+        Demo: usuario <code>estudiante</code> contraseña <code>1234</code>
+      </p>
+    </section>
+
+    <!-- ============ SCREEN: REGISTER ============ -->
+    <section class="screen" id="screen-register">
+      <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
+        <i class="bi bi-arrow-left"></i> Atrás
+      </button>
+      <div class="text-center mb-3">
+        <h2 class="screen-title">REGISTRO</h2>
+        <p class="screen-subtitle">Crea tu cuenta nueva</p>
+      </div>
+      <div class="placeholder-box">
+        <i class="bi bi-pencil-square"></i>
+        <div class="placeholder-title">Pantalla de registro</div>
+        <p class="placeholder-text">Aquí iría el formulario de creación de cuenta nueva. Por ahora es una vista de marcador para mantener el flujo conectado.</p>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN: HOME ESTUDIANTE ============ -->
+    <section class="screen" id="screen-home">
+      <div class="text-center mb-3">
+        <h2 class="screen-title">HOME — ESTUDIANTE</h2>
+      </div>
+      <p class="welcome text-center mb-3">Hola, <strong id="welcomeName">estudiante</strong> 👋</p>
+
+      <div class="row g-3 mb-4">
+        <div class="col-6">
+          <button class="menu-tile" onclick="navigate('datos')">
+            <i class="bi bi-person-vcard"></i>
+            <span>Datos<br>personales</span>
+          </button>
+        </div>
+        <div class="col-6">
+          <button class="menu-tile" onclick="navigate('calificaciones')">
+            <i class="bi bi-journal-text"></i>
+            <span>Consulta<br>de Notas</span>
+          </button>
+        </div>
+        <div class="col-12">
+          <button class="menu-tile" onclick="navigate('asistencias')">
+            <i class="bi bi-check2-square"></i>
+            <span>Consulta de asistencias</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="d-flex justify-content-end mt-auto w-100">
+        <button class="btn btn-logout" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN: CALIFICACIONES ============ -->
+    <section class="screen" id="screen-calificaciones">
+      <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
+        <i class="bi bi-arrow-left"></i> Atrás
+      </button>
+      <div class="text-center mb-3">
+        <h2 class="screen-title">CALIFICACIONES</h2>
+        <p class="screen-subtitle">Selecciona una asignatura</p>
+      </div>
+
+      <div class="row g-2 flex-grow-1">
+        <div class="col-4">
+          <div class="subjects-sidebar h-100" aria-label="Listado de asignaturas">
+            <div class="subject-item active" data-subject="Matemáticas">Matemáticas</div>
+            <div class="subject-item" data-subject="Lenguaje">Lenguaje</div>
+            <div class="subject-item" data-subject="Biología">Biología</div>
+            <div class="subject-item" data-subject="Historia">Historia</div>
+            <div class="subject-item" data-subject="Inglés">Inglés</div>
+          </div>
+        </div>
+        <div class="col-8">
+          <div class="grades-table-wrap">
+            <table class="grades-table table">
+              <thead>
+                <tr><th>Período</th><th>Nota</th></tr>
+              </thead>
+              <tbody id="gradesBody">
+                <tr><td>1° Período</td><td>4.5</td></tr>
+                <tr><td>2° Período</td><td>4.2</td></tr>
+                <tr><td>3° Período</td><td>4.7</td></tr>
+                <tr><td>4° Período</td><td>4.3</td></tr>
+                <tr><td>Promedio</td><td>4.4</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN: DATOS ============ -->
+    <section class="screen" id="screen-datos">
+      <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
+        <i class="bi bi-arrow-left"></i> Atrás
+      </button>
+      <div class="text-center mb-3">
+        <h2 class="screen-title">DATOS PERSONALES</h2>
+        <p class="screen-subtitle">Información de tu perfil</p>
+      </div>
+      <div class="placeholder-box">
+        <i class="bi bi-person-circle"></i>
+        <div class="placeholder-title">Tu perfil</div>
+        <p class="placeholder-text">Aquí se mostrarían los datos personales del estudiante: nombre, documento, grado, contacto. Esta vista se conecta con la base de datos del colegio.</p>
+      </div>
+    </section>
+
+    <!-- ============ SCREEN: ASISTENCIAS ============ -->
+    <section class="screen" id="screen-asistencias">
+      <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
+        <i class="bi bi-arrow-left"></i> Atrás
+      </button>
+      <div class="text-center mb-3">
+        <h2 class="screen-title">CONSULTA DE ASISTENCIAS</h2>
+        <p class="screen-subtitle">Tu registro de asistencia</p>
+      </div>
+      <div class="placeholder-box">
+        <i class="bi bi-calendar-check"></i>
+        <div class="placeholder-title">Asistencias</div>
+        <p class="placeholder-text">Aquí aparecería el listado de asistencias por asignatura, con días presentes, ausentes y justificados. Útil para que el estudiante revise su record completo.</p>
+      </div>
+    </section>
+
+  </div>
+
+  <p class="info-strip">NEXTION · 2026</p>
+
+  <!-- Bootstrap JS Bundle (incluye Popper) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <script>
+    // ============ NAVIGATION ============
+    let history = ['login'];
+
+    function showScreen(screenId) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      const target = document.getElementById('screen-' + screenId);
+      if (target) target.classList.add('active');
+    }
+
+    function navigate(screenId) {
+      history.push(screenId);
+      showScreen(screenId);
+    }
+
+    function goBack() {
+      if (history.length > 1) {
+        history.pop();
+        showScreen(history[history.length - 1]);
+      }
+    }
+
+    // ============ LOGIN HANDLER ============
+    function handleLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('user').value.trim();
+      const pass = document.getElementById('pass').value.trim();
+      const error = document.getElementById('loginError');
+
+      if (!user || !pass) {
+        error.textContent = 'Por favor completa ambos campos';
+        return;
+      }
+
+      // Demo: cualquier combinación de usuario+contraseña funciona
+      if ((user === 'estudiante' && pass === '1234') || (user.length > 0 && pass.length > 0)) {
+        error.textContent = '';
+        document.getElementById('welcomeName').textContent = user;
+        history = ['login', 'home'];
+        showScreen('home');
+      } else {
+        error.textContent = 'Credenciales incorrectas';
+      }
+    }
+
+    function logout() {
+      document.getElementById('user').value = '';
+      document.getElementById('pass').value = '';
+      document.getElementById('loginError').textContent = '';
+      history = ['login'];
+      showScreen('login');
+    }
+
+    // ============ CALIFICACIONES ============
+    const subjectGrades = {
+      'Matemáticas': [['1° Período','4.5'],['2° Período','4.2'],['3° Período','4.7'],['4° Período','4.3'],['Promedio','4.4']],
+      'Lenguaje':    [['1° Período','4.0'],['2° Período','4.3'],['3° Período','4.1'],['4° Período','4.5'],['Promedio','4.2']],
+      'Biología':    [['1° Período','3.8'],['2° Período','4.0'],['3° Período','4.2'],['4° Período','4.4'],['Promedio','4.1']],
+      'Historia':    [['1° Período','4.6'],['2° Período','4.5'],['3° Período','4.7'],['4° Período','4.8'],['Promedio','4.7']],
+      'Inglés':      [['1° Período','3.9'],['2° Período','4.1'],['3° Período','4.0'],['4° Período','4.2'],['Promedio','4.1']],
+    };
+
+    document.querySelectorAll('.subject-item').forEach(item => {
+      item.addEventListener('click', () => {
+        document.querySelectorAll('.subject-item').forEach(i => i.classList.remove('active'));
+        item.classList.add('active');
+        const data = subjectGrades[item.dataset.subject] || [];
+        document.getElementById('gradesBody').innerHTML = data.map(
+          ([periodo, nota]) => `<tr><td>${periodo}</td><td>${nota}</td></tr>`
+        ).join('');
+      });
+    });
+  </script>
+</body>
+</html>
