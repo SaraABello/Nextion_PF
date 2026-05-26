@@ -278,6 +278,309 @@ body {
   box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.35);
 }
 
+/* ============ DOCENTE — EDITOR DE NOTAS ============ */
+/* Sidebar de "mis asignaturas" muestra materia + grupo en dos líneas */
+.subject-item .ts-group-label {
+  display: block;
+  font-size: 10px;
+  opacity: 0.7;
+  margin-top: 2px;
+  font-weight: 400;
+}
+
+.grades-editor-header {
+  color: var(--nx-text);
+  font-size: 13px;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  background: var(--nx-card-soft);
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+  text-align: center;
+}
+.grades-editor-header strong {
+  color: var(--nx-pink-soft);
+  font-size: 14px;
+}
+
+.grades-editor-wrap {
+  background: var(--nx-card-soft);
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+  overflow-x: auto;
+}
+.grades-editor-table {
+  width: 100%;
+  margin: 0;
+  border-collapse: collapse;
+}
+.grades-editor-table thead th {
+  background: var(--nx-purple-deep);
+  color: var(--nx-text);
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 10px 8px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+.grades-editor-table thead th:first-child { text-align: left; padding-left: 14px; }
+.grades-editor-table tbody td {
+  padding: 8px;
+  border-bottom: 1px solid rgba(76, 29, 149, 0.4);
+  font-size: 12.5px;
+  color: var(--nx-text-muted);
+  text-align: center;
+}
+.grades-editor-table tbody td:first-child {
+  padding-left: 14px;
+  color: var(--nx-text);
+  text-align: left;
+  font-weight: 700;
+}
+.grades-editor-table tbody tr:last-child td { border-bottom: none; }
+
+.grade-input {
+  width: 64px;
+  background: var(--nx-text);
+  color: #1E293B;
+  border: 1.5px solid transparent;
+  border-radius: 5px;
+  padding: 6px;
+  text-align: center;
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 700;
+  -moz-appearance: textfield;
+}
+.grade-input::-webkit-outer-spin-button,
+.grade-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.grade-input:focus {
+  outline: none;
+  border-color: var(--nx-purple);
+}
+.grade-input.dirty {
+  border-color: var(--nx-pink);
+  box-shadow: 0 0 0 2px rgba(236, 72, 153, 0.25);
+}
+
+.grades-empty {
+  color: var(--nx-text-dim);
+  font-style: italic;
+  text-align: center;
+  padding: 30px 20px;
+  background: var(--nx-card-soft);
+  border: 1px dashed var(--nx-border);
+  border-radius: 8px;
+}
+
+/* ============ DOCENTE — REGISTRAR ASISTENCIAS ============ */
+.att-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  background: var(--nx-card-soft);
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+}
+.att-toolbar label {
+  color: var(--nx-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+.att-toolbar input[type="date"] {
+  background: var(--nx-text);
+  color: #1E293B;
+  border: none;
+  border-radius: 5px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-family: inherit;
+  font-weight: 700;
+}
+
+.att-btn-group {
+  display: inline-flex;
+  gap: 4px;
+}
+.att-btn {
+  width: 38px;
+  height: 32px;
+  border: 1.5px solid;
+  background: transparent;
+  border-radius: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .15s ease;
+  font-family: inherit;
+}
+.att-btn[data-status="presente"]    { border-color: rgba(34, 197, 94, 0.5);  color: #86EFAC; }
+.att-btn[data-status="ausente"]     { border-color: rgba(236, 72, 153, 0.5); color: var(--nx-pink-soft); }
+.att-btn[data-status="justificado"] { border-color: rgba(245, 158, 11, 0.5); color: #FCD34D; }
+
+.att-btn:hover { transform: translateY(-1px); }
+
+.att-btn[data-status="presente"].active {
+  background: rgba(34, 197, 94, 0.3);
+  color: #BBF7D0;
+  border-color: #86EFAC;
+}
+.att-btn[data-status="ausente"].active {
+  background: rgba(236, 72, 153, 0.3);
+  color: var(--nx-text);
+  border-color: var(--nx-pink);
+}
+.att-btn[data-status="justificado"].active {
+  background: rgba(245, 158, 11, 0.3);
+  color: #FDE68A;
+  border-color: #FCD34D;
+}
+
+/* ============ DOCENTE — LISTADO DE ESTUDIANTES ============ */
+.students-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 10px;
+  padding: 10px 14px;
+  background: var(--nx-card-soft);
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+  flex-wrap: wrap;
+}
+.students-toolbar input[type="text"] {
+  flex: 1;
+  min-width: 200px;
+  background: var(--nx-text);
+  color: #1E293B;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 11px;
+  font-size: 13px;
+  font-family: inherit;
+}
+.students-filter {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--nx-text-muted);
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0;
+  cursor: pointer;
+  user-select: none;
+}
+.students-filter input { accent-color: var(--nx-pink); }
+
+.students-table tbody td .st-name {
+  color: var(--nx-text);
+  font-weight: 700;
+}
+.students-table tbody td .st-meta {
+  color: var(--nx-text-dim);
+  font-size: 11px;
+  margin-top: 2px;
+}
+.students-table tbody td.td-empty {
+  text-align: center;
+  color: var(--nx-text-dim);
+  font-style: italic;
+  padding: 30px;
+}
+.students-table tbody td.td-action { text-align: right; }
+
+.btn-st-edit {
+  background: transparent;
+  color: var(--nx-purple-soft);
+  border: 1px solid rgba(192, 132, 252, 0.4);
+  border-radius: 5px;
+  padding: 4px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all .2s ease;
+  font-family: inherit;
+}
+.btn-st-edit:hover {
+  background: var(--nx-purple);
+  color: var(--nx-text);
+  border-color: var(--nx-purple);
+}
+
+/* Inputs deshabilitados (en formularios de edición) */
+.register-card .form-control:disabled {
+  background: rgba(255, 255, 255, 0.7);
+  color: #64748B;
+  cursor: not-allowed;
+}
+
+/* ============ DOCENTE — LISTADOS ============ */
+.section-title {
+  color: var(--nx-purple-soft);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin: 0 0 8px;
+}
+
+.my-subjects-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.my-subject-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--nx-card-soft);
+  border: 1px solid var(--nx-border);
+  border-radius: 8px;
+  padding: 10px 14px;
+}
+.my-subject-item .ms-name {
+  flex: 1;
+  color: var(--nx-text);
+  font-weight: 700;
+  font-size: 14px;
+}
+.my-subject-item .ms-group {
+  color: var(--nx-text-muted);
+  font-size: 12px;
+}
+.my-subject-empty {
+  color: var(--nx-text-dim);
+  font-style: italic;
+  font-size: 12px;
+  text-align: center;
+  padding: 14px;
+  background: var(--nx-card-soft);
+  border: 1px dashed var(--nx-border);
+  border-radius: 8px;
+}
+.btn-ms-delete {
+  background: transparent;
+  color: var(--nx-pink-soft);
+  border: 1px solid rgba(236, 72, 153, 0.4);
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all .2s ease;
+}
+.btn-ms-delete:hover {
+  background: var(--nx-pink);
+  color: var(--nx-text);
+  border-color: var(--nx-pink);
+}
+
 /* ============ HOME — MENU TILES ============ */
 .welcome { color: var(--nx-purple-soft); font-size: 13px; width: 100%; }
 .welcome strong { color: var(--nx-text); }

@@ -290,7 +290,7 @@
       </div>
     </section>
 
-    <!-- ============ SCREEN: TEACHER — MIS ASIGNATURAS (placeholder) ============ -->
+    <!-- ============ SCREEN: TEACHER — MIS ASIGNATURAS ============ -->
     <section class="screen" id="screen-teacher-subjects">
       <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
         <i class="bi bi-arrow-left"></i> Atrás
@@ -299,58 +299,113 @@
         <h2 class="screen-title">MIS ASIGNATURAS</h2>
         <p class="screen-subtitle">Crear y gestionar las materias que dictas</p>
       </div>
-      <div class="placeholder-box">
-        <i class="bi bi-book"></i>
-        <div class="placeholder-title">Próximamente — Fase 2</div>
-        <p class="placeholder-text">Aquí podrás crear materias nuevas y asignarlas a los grupos que enseñas.</p>
+
+      <!-- Listado de asignaturas a mi cargo -->
+      <h6 class="section-title">A mi cargo</h6>
+      <div class="my-subjects-list" id="mySubjectsList">
+        <div class="my-subject-empty">Cargando…</div>
       </div>
+
+      <!-- Formulario para asignar nueva -->
+      <h6 class="section-title mt-3">Asignar nueva</h6>
+      <div class="role-tabs mb-3">
+        <button type="button" class="role-tab active" id="tab-subj-existing" onclick="setSubjectMode('existing')">
+          <i class="bi bi-list-ul"></i> Existente
+        </button>
+        <button type="button" class="role-tab" id="tab-subj-new" onclick="setSubjectMode('new')">
+          <i class="bi bi-plus-circle"></i> Crear nueva
+        </button>
+      </div>
+
+      <form class="register-card" id="assignSubjectForm" onsubmit="handleAssignSubject(event)">
+        <!-- Modo: existente -->
+        <div id="subj-existing-fields" class="mb-2">
+          <label class="form-label" for="assign-subject">Materia</label>
+          <select class="form-control form-select" id="assign-subject">
+            <option value="">Cargando materias…</option>
+          </select>
+        </div>
+
+        <!-- Modo: nueva -->
+        <div id="subj-new-fields" class="mb-2" style="display:none">
+          <label class="form-label" for="assign-new-subject">Nombre de la nueva materia</label>
+          <input class="form-control" id="assign-new-subject" type="text" placeholder="Ej: Filosofía">
+        </div>
+
+        <!-- Siempre visible -->
+        <div class="mb-2">
+          <label class="form-label" for="assign-group">Grupo</label>
+          <select class="form-control form-select" id="assign-group">
+            <option value="">Cargando grupos…</option>
+          </select>
+        </div>
+
+        <button type="submit" class="btn btn-nx-primary w-100 mt-2">Asignar a mi cargo</button>
+      </form>
+
+      <p class="login-error mt-3 mb-0" id="assignMessage"></p>
     </section>
 
-    <!-- ============ SCREEN: TEACHER — CALIFICAR (placeholder) ============ -->
+    <!-- ============ SCREEN: TEACHER — CALIFICAR ============ -->
     <section class="screen" id="screen-teacher-grades">
       <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
         <i class="bi bi-arrow-left"></i> Atrás
       </button>
       <div class="text-center mb-3">
         <h2 class="screen-title">CALIFICAR ESTUDIANTES</h2>
-        <p class="screen-subtitle">Registra notas por estudiante y período</p>
+        <p class="screen-subtitle">Selecciona una de tus asignaturas y registra notas</p>
       </div>
-      <div class="placeholder-box">
-        <i class="bi bi-pencil-square"></i>
-        <div class="placeholder-title">Próximamente — Fase 3</div>
-        <p class="placeholder-text">Selecciona una asignatura, escoge un estudiante y registra sus notas de los 4 períodos.</p>
+
+      <div class="row g-2 flex-grow-1">
+        <div class="col-4 col-md-3">
+          <div class="subjects-sidebar h-100" id="teacherGradesSidebar" aria-label="Mis asignaturas">
+            <div class="subject-item">Cargando…</div>
+          </div>
+        </div>
+        <div class="col-8 col-md-9">
+          <div id="teacherGradesContent">
+            <div class="grades-empty">Selecciona una asignatura para empezar</div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ============ SCREEN: TEACHER — ASISTENCIAS (placeholder) ============ -->
+    <!-- ============ SCREEN: TEACHER — REGISTRAR ASISTENCIAS ============ -->
     <section class="screen" id="screen-teacher-attendance">
       <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
         <i class="bi bi-arrow-left"></i> Atrás
       </button>
       <div class="text-center mb-3">
         <h2 class="screen-title">REGISTRAR ASISTENCIAS</h2>
-        <p class="screen-subtitle">Marca la asistencia del día por asignatura</p>
+        <p class="screen-subtitle">Selecciona materia y fecha, marca P / A / J por estudiante</p>
       </div>
-      <div class="placeholder-box">
-        <i class="bi bi-clipboard-check"></i>
-        <div class="placeholder-title">Próximamente — Fase 4</div>
-        <p class="placeholder-text">Selecciona una asignatura, escoge la fecha y marca cada estudiante como presente, ausente o justificado.</p>
+
+      <div class="row g-2 flex-grow-1">
+        <div class="col-4 col-md-3">
+          <div class="subjects-sidebar h-100" id="teacherAttendanceSidebar" aria-label="Mis asignaturas">
+            <div class="subject-item">Cargando…</div>
+          </div>
+        </div>
+        <div class="col-8 col-md-9">
+          <div id="teacherAttendanceContent">
+            <div class="grades-empty">Selecciona una asignatura para empezar</div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- ============ SCREEN: TEACHER — ESTUDIANTES (placeholder) ============ -->
+    <!-- ============ SCREEN: TEACHER — ESTUDIANTES ============ -->
     <section class="screen" id="screen-teacher-students">
       <button class="btn btn-back align-self-start mb-3" onclick="goBack()">
         <i class="bi bi-arrow-left"></i> Atrás
       </button>
       <div class="text-center mb-3">
         <h2 class="screen-title">ESTUDIANTES</h2>
-        <p class="screen-subtitle">Listado de estudiantes activos</p>
+        <p class="screen-subtitle">Listado y edición de información</p>
       </div>
-      <div class="placeholder-box">
-        <i class="bi bi-people"></i>
-        <div class="placeholder-title">Próximamente — Fase 5</div>
-        <p class="placeholder-text">Aquí verás todos los estudiantes activos y podrás editar su información.</p>
+
+      <div id="teacherStudentsContent">
+        <div class="grades-empty">Cargando estudiantes…</div>
       </div>
     </section>
 
