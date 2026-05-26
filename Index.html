@@ -52,11 +52,61 @@
         <h2 class="screen-title">REGISTRO</h2>
         <p class="screen-subtitle">Crea tu cuenta nueva</p>
       </div>
-      <div class="placeholder-box">
-        <i class="bi bi-pencil-square"></i>
-        <div class="placeholder-title">Pantalla de registro</div>
-        <p class="placeholder-text">Aquí iría el formulario de creación de cuenta nueva. Por ahora es una vista de marcador para mantener el flujo conectado.</p>
+
+      <!-- Selector de rol -->
+      <div class="role-tabs mb-3">
+        <button type="button" class="role-tab active" id="tab-student" onclick="setRole('student')">
+          <i class="bi bi-mortarboard"></i> Estudiante
+        </button>
+        <button type="button" class="role-tab" id="tab-teacher" onclick="setRole('teacher')">
+          <i class="bi bi-person-badge"></i> Docente
+        </button>
       </div>
+
+      <form class="register-card" id="registerForm" onsubmit="handleRegister(event)">
+        <div class="mb-2">
+          <label class="form-label" for="reg-name">Nombre</label>
+          <input class="form-control" id="reg-name" type="text" autocomplete="given-name">
+        </div>
+        <div class="mb-2">
+          <label class="form-label" for="reg-lastname">Apellido</label>
+          <input class="form-control" id="reg-lastname" type="text" autocomplete="family-name">
+        </div>
+        <div class="mb-2">
+          <label class="form-label" for="reg-username">Usuario</label>
+          <input class="form-control" id="reg-username" type="text" autocomplete="username">
+        </div>
+        <div class="mb-2">
+          <label class="form-label" for="reg-password">Contraseña</label>
+          <input class="form-control" id="reg-password" type="password" autocomplete="new-password">
+        </div>
+
+        <!-- Campos solo para estudiante -->
+        <div id="student-fields">
+          <div class="mb-2">
+            <label class="form-label" for="reg-document">Documento</label>
+            <input class="form-control" id="reg-document" type="text" inputmode="numeric">
+          </div>
+          <div class="mb-2">
+            <label class="form-label" for="reg-group">Grupo</label>
+            <select class="form-control form-select" id="reg-group">
+              <option value="">Cargando grupos…</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Campos solo para docente -->
+        <div id="teacher-fields" style="display:none">
+          <div class="mb-2">
+            <label class="form-label" for="reg-admin">Contraseña de administrador</label>
+            <input class="form-control" id="reg-admin" type="password" autocomplete="off">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-nx-primary w-100 mt-2">Crear cuenta</button>
+      </form>
+
+      <p class="login-error mt-3 mb-0" id="registerMessage"></p>
     </section>
 
     <!-- ============ SCREEN: HOME ESTUDIANTE ============ -->
@@ -145,15 +195,15 @@
         <div class="profile-head">
           <div class="profile-avatar" id="profileAvatar">ES</div>
           <div>
-            <div class="profile-name" id="profileName">Sara Álvarez</div>
-            <div class="profile-meta">Estudiante · 11° A · 2026</div>
+            <div class="profile-name" id="profileName">—</div>
+            <div class="profile-meta" id="profileMeta">—</div>
           </div>
         </div>
-        <div class="profile-row"><span class="k">Documento</span><span class="v">1 002 345 678</span></div>
-        <div class="profile-row"><span class="k">Grupo</span><span class="v">11° A</span></div>
-        <div class="profile-row"><span class="k">Año lectivo</span><span class="v">2026</span></div>
-        <div class="profile-row"><span class="k">Correo</span><span class="v" id="profileEmail">estudiante@nextion.edu.co</span></div>
-        <div class="profile-row"><span class="k">Estado</span><span class="v">Activo</span></div>
+        <div class="profile-row"><span class="k">Documento</span><span class="v" id="profileDocumento">—</span></div>
+        <div class="profile-row"><span class="k">Grupo</span><span class="v" id="profileGrupo">—</span></div>
+        <div class="profile-row"><span class="k">Año lectivo</span><span class="v" id="profileAnio">—</span></div>
+        <div class="profile-row"><span class="k">Correo</span><span class="v" id="profileEmail">—</span></div>
+        <div class="profile-row"><span class="k">Estado</span><span class="v" id="profileEstado">—</span></div>
       </div>
     </section>
 
@@ -201,6 +251,9 @@
 
   <!-- Bootstrap JS Bundle (incluye Popper) -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Cliente de Supabase (expone window.supabase con createClient) -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- Lógica de la aplicación NEXTION -->
   <script src="script.js"></script>
