@@ -31,7 +31,9 @@ function navigate(screenId) {
   history.push(screenId);
   showScreen(screenId);
   // Hook por pantalla: cargar datos justo cuando se abre
-  if (screenId === 'register') loadGroupsForRegister();
+  if (screenId === 'register')      loadGroupsForRegister();
+  if (screenId === 'calificaciones') loadSubjectsForGrades();
+  if (screenId === 'asistencias')    loadSubjectsForAttendance();
 }
 
 function goBack() {
@@ -284,86 +286,170 @@ async function handleRegister(e) {
 }
 
 // ============ CALIFICACIONES ============
-const subjectGrades = {
-  'Matemáticas': [['1° Período','4.5'],['2° Período','4.2'],['3° Período','4.7'],['4° Período','4.3'],['Promedio','4.4']],
-  'Lenguaje':    [['1° Período','4.0'],['2° Período','4.3'],['3° Período','4.1'],['4° Período','4.5'],['Promedio','4.2']],
-  'Biología':    [['1° Período','3.8'],['2° Período','4.0'],['3° Período','4.2'],['4° Período','4.4'],['Promedio','4.1']],
-  'Historia':    [['1° Período','4.6'],['2° Período','4.5'],['3° Período','4.7'],['4° Período','4.8'],['Promedio','4.7']],
-  'Inglés':      [['1° Período','3.9'],['2° Período','4.1'],['3° Período','4.0'],['4° Período','4.2'],['Promedio','4.1']],
-};
+// Carga la lista de materias en la sidebar y selecciona la primera por defecto.
+async function loadSubjectsForGrades() {
+  const sidebar   = document.querySelector('#screen-calificaciones .subjects-sidebar');
+  const tableBody = document.getElementById('gradesBody');
 
-document.querySelectorAll('[data-subject]').forEach(item => {
-  item.addEventListener('click', () => {
-    document.querySelectorAll('[data-subject]').forEach(i => i.classList.remove('active'));
-    item.classList.add('active');
-    const data = subjectGrades[item.dataset.subject] || [];
-    document.getElementById('gradesBody').innerHTML = data.map(
-      ([periodo, nota]) => `<tr><td>${periodo}</td><td>${nota}</td></tr>`
-    ).join('');
-  });
-});
+  if (!currentStudent) {
+    sidebar.innerHTML   = '<div class="subject-item">Vista solo para estudiantes</div>';
+    tableBody.innerHTML = '';
+    return;
+  }
 
-// ============ ASISTENCIAS ============
-const subjectAttendance = {
-  'Matemáticas': [
-    ['lun 4 mar 2026',  'Presente'],
-    ['mié 6 mar 2026',  'Presente'],
-    ['lun 11 mar 2026', 'Ausente'],
-    ['mié 13 mar 2026', 'Justificado'],
-    ['lun 18 mar 2026', 'Presente'],
-    ['mié 20 mar 2026', 'Presente'],
-  ],
-  'Lenguaje': [
-    ['mar 5 mar 2026',  'Presente'],
-    ['jue 7 mar 2026',  'Presente'],
-    ['mar 12 mar 2026', 'Presente'],
-    ['jue 14 mar 2026', 'Ausente'],
-    ['mar 19 mar 2026', 'Presente'],
-  ],
-  'Biología': [
-    ['lun 4 mar 2026',  'Presente'],
-    ['mié 6 mar 2026',  'Presente'],
-    ['lun 11 mar 2026', 'Presente'],
-  ],
-  'Historia': [
-    ['mar 5 mar 2026',  'Justificado'],
-    ['jue 7 mar 2026',  'Presente'],
-    ['mar 12 mar 2026', 'Presente'],
-  ],
-  'Inglés': [
-    ['mié 6 mar 2026',  'Presente'],
-    ['vie 8 mar 2026',  'Ausente'],
-    ['mié 13 mar 2026', 'Presente'],
-  ],
-};
+  const { data, error } = await supabaseClient
+    .from('subject')
+    .select('id, name_subject')
+    .order('name_subject');
 
-const ATT_BADGE_CLASS = {
-  'Presente':    'att-presente',
-  'Ausente':     'att-ausente',
-  'Justificado': 'att-justificado',
-};
+  if (error) {
+    sidebar.innerHTML = '<div class="subject-item">Error cargando materias</div>';
+    console.error(error);
+    return;
+  }
+  if (!data || data.length === 0) {
+    sidebar.innerHTML   = '<div class="subject-item">Sin materias registradas</div>';
+    tableBody.innerHTML = '';
+    return;
+  }
 
-function renderAttendance(subject) {
-  const rows = subjectAttendance[subject] || [];
-  const tally = { Presente: 0, Ausente: 0, Justificado: 0 };
-  rows.forEach(([, s]) => { tally[s] = (tally[s] || 0) + 1; });
-
-  document.getElementById('attCountPresente').textContent    = tally.Presente;
-  document.getElementById('attCountAusente').textContent     = tally.Ausente;
-  document.getElementById('attCountJustificado').textContent = tally.Justificado;
-
-  document.getElementById('attendanceBody').innerHTML = rows.map(
-    ([fecha, estado]) =>
-      `<tr><td>${fecha}</td><td><span class="att-badge ${ATT_BADGE_CLASS[estado] || ''}">${estado}</span></td></tr>`
+  sidebar.innerHTML = data.map((s, i) =>
+    `<div class="subject-item ${i === 0 ? 'active' : ''}" data-subject-id="${s.id}">${s.name_subject}</div>`
   ).join('');
+
+  loadGradesFor(data[0].id);
 }
 
-document.querySelectorAll('[data-att-subject]').forEach(item => {
-  item.addEventListener('click', () => {
-    document.querySelectorAll('[data-att-subject]').forEach(i => i.classList.remove('active'));
-    item.classList.add('active');
-    renderAttendance(item.dataset.attSubject);
-  });
-});
+// Trae las notas del estudiante actual para una materia y arma 4 períodos + promedio.
+async function loadGradesFor(subjectId) {
+  const tableBody = document.getElementById('gradesBody');
 
-renderAttendance('Matemáticas');
+  const { data, error } = await supabaseClient
+    .from('score')
+    .select('period, note')
+    .eq('id_student', currentStudent.id)
+    .eq('id_subject', subjectId)
+    .order('period');
+
+  if (error) {
+    tableBody.innerHTML = '<tr><td colspan="2">Error cargando notas</td></tr>';
+    console.error(error);
+    return;
+  }
+
+  const byPeriod = Object.fromEntries((data || []).map(r => [r.period, Number(r.note)]));
+  const html = [];
+  let sum = 0, count = 0;
+
+  for (let p = 1; p <= 4; p++) {
+    const note = byPeriod[p];
+    html.push(`<tr><td>${p}° Período</td><td>${note != null ? note.toFixed(1) : '—'}</td></tr>`);
+    if (note != null) { sum += note; count++; }
+  }
+  const avg = count ? (sum / count).toFixed(1) : '—';
+  html.push(`<tr><td>Promedio</td><td>${avg}</td></tr>`);
+
+  tableBody.innerHTML = html.join('');
+}
+
+// Delegación: un solo listener en la sidebar maneja clicks sobre items dinámicos
+document.querySelector('#screen-calificaciones .subjects-sidebar')
+  .addEventListener('click', (e) => {
+    const item = e.target.closest('[data-subject-id]');
+    if (!item) return;
+    item.parentElement.querySelectorAll('.subject-item')
+      .forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    loadGradesFor(parseInt(item.dataset.subjectId, 10));
+  });
+
+// ============ ASISTENCIAS ============
+async function loadSubjectsForAttendance() {
+  const sidebar = document.querySelector('#screen-asistencias .subjects-sidebar');
+  const body    = document.getElementById('attendanceBody');
+
+  if (!currentStudent) {
+    sidebar.innerHTML = '<div class="subject-item">Vista solo para estudiantes</div>';
+    body.innerHTML    = '';
+    resetAttendanceTally();
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from('subject')
+    .select('id, name_subject')
+    .order('name_subject');
+
+  if (error) {
+    sidebar.innerHTML = '<div class="subject-item">Error cargando materias</div>';
+    console.error(error);
+    return;
+  }
+  if (!data || data.length === 0) {
+    sidebar.innerHTML = '<div class="subject-item">Sin materias registradas</div>';
+    body.innerHTML    = '';
+    resetAttendanceTally();
+    return;
+  }
+
+  sidebar.innerHTML = data.map((s, i) =>
+    `<div class="subject-item ${i === 0 ? 'active' : ''}" data-att-subject-id="${s.id}">${s.name_subject}</div>`
+  ).join('');
+
+  loadAttendanceFor(data[0].id);
+}
+
+async function loadAttendanceFor(subjectId) {
+  const body = document.getElementById('attendanceBody');
+
+  const { data, error } = await supabaseClient
+    .from('attendance')
+    .select('date, status')
+    .eq('id_student', currentStudent.id)
+    .eq('id_subject', subjectId)
+    .order('date');
+
+  if (error) {
+    body.innerHTML = '<tr><td colspan="2">Error cargando asistencias</td></tr>';
+    console.error(error);
+    return;
+  }
+
+  const rows  = data || [];
+  const tally = { presente: 0, ausente: 0, justificado: 0 };
+  rows.forEach(r => { tally[r.status] = (tally[r.status] || 0) + 1; });
+
+  document.getElementById('attCountPresente').textContent    = tally.presente;
+  document.getElementById('attCountAusente').textContent     = tally.ausente;
+  document.getElementById('attCountJustificado').textContent = tally.justificado;
+
+  body.innerHTML = rows.map(r => {
+    const label = r.status.charAt(0).toUpperCase() + r.status.slice(1);
+    // Los valores en DB ('presente'/'ausente'/'justificado') coinciden con las clases CSS
+    return `<tr><td>${formatAttendanceDate(r.date)}</td><td><span class="att-badge att-${r.status}">${label}</span></td></tr>`;
+  }).join('');
+}
+
+function resetAttendanceTally() {
+  document.getElementById('attCountPresente').textContent    = 0;
+  document.getElementById('attCountAusente').textContent     = 0;
+  document.getElementById('attCountJustificado').textContent = 0;
+}
+
+// 'YYYY-MM-DD' → 'lun, 4 mar 2026'
+function formatAttendanceDate(isoDate) {
+  const d = new Date(isoDate + 'T00:00:00');
+  return d.toLocaleDateString('es-CO', {
+    weekday: 'short', day: 'numeric', month: 'short', year: 'numeric'
+  });
+}
+
+document.querySelector('#screen-asistencias .subjects-sidebar')
+  .addEventListener('click', (e) => {
+    const item = e.target.closest('[data-att-subject-id]');
+    if (!item) return;
+    item.parentElement.querySelectorAll('.subject-item')
+      .forEach(i => i.classList.remove('active'));
+    item.classList.add('active');
+    loadAttendanceFor(parseInt(item.dataset.attSubjectId, 10));
+  });
