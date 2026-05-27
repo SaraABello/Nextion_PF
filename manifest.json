@@ -3,7 +3,7 @@
   "short_name": "NEXTION",
   "description": "Sistema académico NEXTION — notas y asistencias",
   "lang": "es",
-  "start_url": "./Index.html",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0A0612",
